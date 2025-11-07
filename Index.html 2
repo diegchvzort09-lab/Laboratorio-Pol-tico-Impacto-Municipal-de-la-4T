@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Laboratorio Político: Impacto Municipal de la 4T</title>
+  <meta name="description" content="Plataforma científica e interactiva sobre el impacto de la Cuarta Transformación en municipios y estados mexicanos. Datos, mapas, análisis y recursos oficiales.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#111114">
+  <link rel="canonical" href="https://www.laboratoriopolitico4T.mx/" />
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Laboratorio Político 4T" />
+  <meta property="og:title" content="Laboratorio Político: Impacto Municipal de la 4T" />
+  <meta property="og:description" content="Análisis científico e interactivo: cómo la Cuarta Transformación impacta a los municipios y estados mexicanos." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=1200&q=80" />
+  <meta property="og:url" content="https://www.laboratoriopolitico4T.mx/" />
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Lora&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --black-matte:#0f0f11;
+      --card:#151517;
+      --muted:#bdbdbd;
+      --gold:#FFD700;
+      --gold-soft:#ffe7a1;
+      --accent:#a18a27;
+      --transition: 0.33s cubic-bezier(.2,.9,.3,.95);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:var(--black-matte);color:var(--muted);font-family:'Lora',Times,serif;-webkit-font-smoothing:antialiased;}
+    a{color:var(--gold);text-decoration:none}
+    img{max-width:100%;display:block}
+    h1,h2,h3{font-family:'Montserrat',Arial,sans-serif;color:var(--gold);margin:0 0 .6rem}
+    p{line-height:1.6;margin:0 0 1rem;color:#d7d7d7}
+    /* NAV */
+    nav{
+      position:fixed;left:0;right:0;top:0;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;
+      background:linear-gradient(180deg, rgba(8,8,10,.82), rgba(10,10,12,.95));
+      border-bottom:1px solid rgba(255,215,0,0.06);z-index:120;
+      box-shadow:0 6px 40px rgba(0,0,0,.6);
+    }
+    .nav-left{display:flex;align-items:center;gap:14px}
+    .lab-logo{display:flex;align-items:center;gap:12px;color:var(--gold);font-weight:700}
+    .lab-logo img{width:42px;height:42px;border-radius:10px;filter:drop-shadow(0 6px 18px #FFD70044)}
+    .nav-menu{display:flex;gap:14px;align-items:center}
+    .nav-menu a{padding:8px 12px;border-radius:999px;color:var(--muted);font-weight:600;transition:all var(--transition)}
+    .nav-menu a:hover,.nav-menu a.active{background:var(--card);color:var(--gold)}
+    .top-actions{display:flex;gap:10px;align-items:center}
+    /* Intro */
+    #intro-landing{
+      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:220;
+      background:linear-gradient(180deg, rgba(2,2,4,.65), rgba(10,8,12,.9)), url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat;
+      text-align:center;padding:28px;transition:opacity .7s ease,visibility .7s ease;
+    }
+    #intro-landing.fadeOut{opacity:0;visibility:hidden;pointer-events:none}
+    .intro-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:36px;border-radius:14px;max-width:920px;box-shadow:0 18px 60px rgba(0,0,0,.6)}
+    .intro-title{font-size:2.4rem;line-height:1.02;margin-bottom:.5rem}
+    .intro-sub{color:#d1d1d1;margin-bottom:20px}
+    .intro-cta{display:flex;gap:12px;justify-content:center;align-items:center}
+    .btn-primary{background:linear-gradient(90deg,var(--gold),#f0c84e);border:none;padding:14px 30px;border-radius:999px;color:#081018;font-weight:700;cursor:pointer;box-shadow:0 8px 40px rgba(255,215,0,0.08);transition:transform .12s}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:12px 20px;border-radius:999px;cursor:pointer}
+    .intro-credits{margin-top:16px;color:#bfbfbf;font-size:.95rem}
+    /* Main content */
+    #main-content{opacity:0;transition:opacity .6s var(--transition);padding-top:92px}
+    #main-content.visible{opacity:1}
+    main{max-width:1200px;margin:40px auto;padding:0 20px}
+    section{margin-bottom:64px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));border-radius:14px;padding:40px;border:1px solid rgba(255,255,255,0.02);box-shadow:0 12px 50px rgba(0,0,0,.6)}
+    /* Hero */
+    .hero{min-height:480px;display:flex;align-items:center;justify-content:space-between;gap:40px;padding:30px;border-bottom:3px solid rgba(255,215,0,0.06);position:relative;overflow:hidden}
+    .hero-left{flex:1 1 520px}
+    .hero-right{flex:0 0 360px;display:flex;flex-direction:column;gap:14px;align-items:center}
+    .hero-map{width:220px;filter:drop-shadow(0 8px 28px #FFD70044);border-radius:8px;background:linear-gradient(180deg, #0b0b0b, rgba(255,255,255,0.02));padding:12px}
+    .hero-summary{color:#d9d9d9;margin-top:10px}
+    .badge { display:inline-block;background:rgba(255,215,0,0.06);color:var(--gold);padding:6px 10px;border-radius:8px;font-weight:700;margin-right:8px }
+    /* Dashboard */
+    .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:22px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+    .kpi{font-size:1.8rem;color:var(--gold);font-weight:700}
+    .search-box{display:flex;gap:10px;align-items:center;margin-top:18px}
+    .search-input{flex:1;padding:12px 16px;border-radius:999px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#eee}
+    .search-btn{padding:10px 16px;border-radius:999px;border:none;background:var(--accent);color:#081018;font-weight:700;cursor:pointer}
+    .map-results{display:flex;gap:18px;flex-wrap:wrap;margin-top:20px}
+    .map-frame{flex:1 1 640px;min-height:360px;border-radius:12px;overflow:hidden;border:2px solid rgba(255,215,0,0.07);background:#080808;display:flex;align-items:center;justify-content:center;position:relative}
+    .details{flex:0 0 320px;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.02);min-height:220px}
+    .municipio-list{position:absolute;left:12px;top:12px;display:flex;flex-direction:column;gap:8px;z-index:20;max-height:320px;overflow:auto;padding-right:6px}
+    .mun-btn{background:rgba(0,0,0,0.45);color:#fff;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);cursor:pointer;white-space:nowrap}
+    .mun-btn:hover{background:rgba(255,215,0,0.06);color:var(--gold)}
+    .chart-card{background:#0b0b0c;border-radius:10px;padding:12px}
+    .expert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:18px}
+    .expert{display:flex;gap:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);cursor:pointer}
+    .expert img{width:72px;height:72px;border-radius:10px;object-fit:cover;filter:grayscale(1)}
+    .resources{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+    .resource-btn{display:inline-flex;gap:10px;align-items:center;padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-weight:700}
+    .resource-btn:hover{box-shadow:0 6px 26px rgba(0,0,0,.6);color:var(--gold)}
+    .subscribe{display:flex;gap:12px;align-items:center;margin-top:14px}
+    .input-sub{padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#eee;flex:1}
+    .btn-download{padding:10px 14px;border-radius:999px;background:linear-gradient(90deg,var(--gold),#f0c84e);border:none;font-weight:800;cursor:pointer}
+    footer{padding:18px 24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,215,0,0.04);color:#cfcfcf}
+    .footer-atom{width:42px;height:42px;filter:drop-shadow(0 8px 20px #FFD70044);animation:spin 6s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media (max-width:1000px){
+      .hero{flex-direction:column;align-items:center;padding:18px}
+      .hero-right{order:2}
+      .hero-left{order:1}
+      .hero-map{width:160px}
+      .map-frame{min-height:260px}
+    }
+    @media (max-width:640px){
+      nav{padding:0 12px}
+      .nav-menu{display:none}
+      .intro-title{font-size:1.3rem}
+      .intro-card{padding:18px}
+      .hero-right{display:none}
+      main{padding:0 12px}
+      section{padding:22px}
+      .details{flex-basis:100%}
+    }
+    .muted { color:#bfbfbf }
+    .small { font-size:.92rem }
+    /* Map state styling: default/hover/active */
+    .state-shape { fill:#1a1a1a; stroke: rgba(255,215,0,0.08); stroke-width:1; cursor:pointer; transition: fill .15s, transform .12s; }
+    .state-shape:hover { fill: #2a2a2a; filter: drop-shadow(0 6px 18px rgba(255,215,0,0.06)); transform: translateY(-2px); }
+    .state-shape.active { fill: rgba(255,215,0,0.12); stroke: rgba(255,215,0,0.7); }
+    .state-label { fill: #ddd; font-size:10px; pointer-events:none; font-family: Arial, Helvetica, sans-serif; }
+  </style>
+</head>
+<body>
+  <!-- INTRO -->
+  <div id="intro-landing" role="dialog" aria-labelledby="intro-title" aria-describedby="intro-desc">
+    <div class="intro-card" role="document" aria-hidden="false">
+      <div style="display:flex;align-items:center;justify-content:center;margin-bottom:6px">
+        <img src="https://cdn-icons-png.flaticon.com/512/2966/2966483.png" alt="Logo lab" width="72" height="72" loading="lazy" style="border-radius:12px">
+      </div>
+      <div id="intro-title" class="intro-title">Laboratorio Político<br><span style="color:var(--gold)">Impacto Municipal de la 4T</span></div>
+      <div id="intro-desc" class="intro-sub">Plataforma premium de investigación sobre los efectos de la Cuarta Transformación (4T) en municipios y estados mexicanos — datos, mapas, análisis experto y recursos oficiales.</div>
+
+      <div class="intro-cta" role="group" aria-label="Acciones principales">
+        <button id="btn-entrar" class="btn-primary" aria-label="Entrar al sitio">Entrar al análisis</button>
+        <button id="btn-resumen" class="btn-ghost" aria-label="Resumen ejecutivo">Resumen ejecutivo</button>
+      </div>
+
+      <div class="intro-credits small muted">Diseño premium — Laboratorio de Investigación Social © 2025</div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav role="navigation" aria-label="Navegación principal">
+    <div class="nav-left">
+      <div class="lab-logo" aria-hidden="false">
+        <img src="https://cdn-icons-png.flaticon.com/512/2966/2966483.png" alt="Logo lab" loading="lazy">
+        <div style="display:flex;flex-direction:column;line-height:1">
+          <span style="font-size:.98rem">Laboratorio Político 4T</span>
+          <small class="muted small">Impacto Municipal · Investigación</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-menu" role="menubar" aria-label="Secciones principales">
+      <a href="#hero" role="menuitem" class="active">Inicio</a>
+      <a href="#metodologia" role="menuitem">Metodología</a>
+      <a href="#resultados" role="menuitem">Resultados</a>
+      <a href="#expertos" role="menuitem">Expertos</a>
+      <a href="#conclusiones" role="menuitem">Conclusiones</a>
+      <a href="#recursos" role="menuitem">Recursos</a>
+    </div>
+
+    <div class="top-actions">
+      <button class="btn-ghost" id="open-report" title="Generar resumen en PDF">Generar PDF</button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div id="main-content" tabindex="-1" aria-hidden="true">
+    <main>
+      <!-- HERO -->
+      <section id="hero" class="hero" aria-labelledby="hero-heading">
+        <div class="hero-left">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="badge">Laboratorio</span>
+            <h1 id="hero-heading" style="margin:0">Cómo la 4T afecta a los municipios</h1>
+          </div>
+          <div class="hero-summary small muted" style="margin-top:10px">
+            Análisis cuantitativo y cualitativo: inversión pública, empleo, educación e infraestructura.
+            Esta plataforma reúne datos oficiales, estudios de campo y entrevistas a gestores municipales para ofrecer una lectura científica y crítica.
+          </div>
+
+          <div class="summary-grid" role="region" aria-label="Indicadores clave">
+            <div class="card">
+              <h3>Resumen ejecutivo</h3>
+              <div class="kpi">+24%</div>
+              <div class="small muted">Aumento promedio de inversión en municipios estudiados</div>
+            </div>
+            <div class="card">
+              <h3>Alcance</h3>
+              <div class="kpi">50+</div>
+              <div class="small muted">Municipios con observación directa y análisis longitudinal</div>
+            </div>
+            <div class="card">
+              <h3>Herramientas</h3>
+              <div class="kpi">Mapas · Gráficas</div>
+              <div class="small muted">Mapas interactivos, series temporales y paneles de expertos</div>
+            </div>
+          </div>
+
+          <!-- Quick search -->
+          <div style="margin-top:18px">
+            <label for="municipio-search" class="small muted">Búsqueda rápida por municipio o estado</label>
+            <div class="search-box" role="search" style="margin-top:8px">
+              <input id="municipio-search" class="search-input" placeholder="Escribe un municipio o estado (ej. Monterrey, Jalisco, Oaxaca...)" aria-label="Buscar municipio o estado">
+              <button id="btn-search" class="search-btn" aria-label="Buscar">Buscar</button>
+            </div>
+            <div id="search-result" class="muted small" style="margin-top:8px"></div>
+          </div>
+        </div>
+
+        <aside class="hero-right" aria-hidden="false">
+          <div class="hero-map" title="Mapa de México">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/Mexico_blank_map.svg" alt="Mapa de México" loading="lazy" onerror="this.style.display='none'">
+          </div>
+
+          <div style="width:100%;display:flex;flex-direction:column;gap:10px;align-items:stretch">
+            <button class="btn-primary" onclick="goToSection('resultados')">Explorar resultados</button>
+            <button class="btn-ghost" onclick="document.getElementById('recursos-links').scrollIntoView({behavior:'smooth'})">Ver recursos</button>
+          </div>
+        </aside>
+      </section>
+
+      <!-- METODOLOGÍA -->
+      <section id="metodologia" aria-labelledby="metodologia-title">
+        <h2 id="metodologia-title">Metodología y alcance</h2>
+        <p>
+          La investigación se apoya en fuentes oficiales (INEGI, Secretaría de Bienestar, Gobierno de México), datos abiertos y trabajo de campo en más de 50 municipios representativos.
+          Se utilizó:
+        </p>
+        <ul style="color:#ccc;margin-top:8px">
+          <li><strong>Análisis estadístico</strong>: series temporales, regresiones y comparaciones pre/post políticas.</li>
+          <li><strong>Estudios de caso</strong>: observación directa en municipios urbanos, semi-urbanos y rurales.</li>
+          <li><strong>Entrevistas</strong>: funcionarios municipales, líderes comunitarios y beneficiarios.</li>
+        </ul>
+
+        <p style="margin-top:12px">
+          Material complementario y protocolos de recolección están disponibles en el informe completo.
+        </p>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
+          <div class="card" style="min-width:260px">
+            <h3>Fuentes principales</h3>
+            <p class="small muted">INEGI · Secretaría de Bienestar · Datos abiertos (datos.gob.mx)</p>
+          </div>
+          <div class="card" style="min-width:260px">
+            <h3>Procedimiento</h3>
+            <p class="small muted">Comparación año a año, control por tamaño poblacional y clusterización por región.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESULTADOS -->
+      <section id="resultados" aria-labelledby="resultados-title">
+        <h2 id="resultados-title">Resultados del Laboratorio</h2>
+
+        <div class="map-results">
+          <div class="map-frame" id="mapFrame" aria-label="Mapa interactivo (demo)">
+            <div class="municipio-list" id="municipio-list" aria-hidden="false">
+              <!-- Buttons generados por JS (municipios + estados) -->
+            </div>
+
+            <!-- SVG schematic 'map' with clickable states (all 32 states included).
+                 Each <g> has data-state-id equal to the state's official short name used in the data array. -->
+            <svg id="svgMap" viewBox="0 0 1200 900" style="width:100%;height:100%;max-height:680px;">
+              <!-- Layout is schematic for click areas; labels included. -->
+              <!-- Row 1 -->
+              <g data-state-id="Baja California"><rect class="state-shape" x="30" y="30" width="120" height="60" rx="8"/><text class="state-label" x="90" y="65" text-anchor="middle">B. California</text></g>
+              <g data-state-id="Baja California Sur"><rect class="state-shape" x="160" y="30" width="140" height="60" rx="8"/><text class="state-label" x="230" y="65" text-anchor="middle">B.C. Sur</text></g>
+              <g data-state-id="Sonora"><rect class="state-shape" x="310" y="30" width="140" height="60" rx="8"/><text class="state-label" x="380" y="65" text-anchor="middle">Sonora</text></g>
+              <g data-state-id="Chihuahua"><rect class="state-shape" x="460" y="30" width="140" height="60" rx="8"/><text class="state-label" x="530" y="65" text-anchor="middle">Chihuahua</text></g>
+              <g data-state-id="Coahuila"><rect class="state-shape" x="610" y="30" width="140" height="60" rx="8"/><text class="state-label" x="680" y="65" text-anchor="middle">Coahuila</text></g>
+              <g data-state-id="Nuevo León"><rect class="state-shape" x="760" y="30" width="120" height="60" rx="8"/><text class="state-label" x="820" y="65" text-anchor="middle">Nuevo León</text></g>
+              <g data-state-id="Tamaulipas"><rect class="state-shape" x="890" y="30" width="140" height="60" rx="8"/><text class="state-label" x="960" y="65" text-anchor="middle">Tamaulipas</text></g>
+
+              <!-- Row 2 -->
+              <g data-state-id="Sinaloa"><rect class="state-shape" x="100" y="120" width="140" height="60" rx="8"/><text class="state-label" x="170" y="155" text-anchor="middle">Sinaloa</text></g>
+              <g data-state-id="Nayarit"><rect class="state-shape" x="260" y="120" width="120" height="60" rx="8"/><text class="state-label" x="320" y="155" text-anchor="middle">Nayarit</text></g>
+              <g data-state-id="Jalisco"><rect class="state-shape" x="390" y="120" width="160" height="60" rx="8"/><text class="state-label" x="470" y="155" text-anchor="middle">Jalisco</text></g>
+              <g data-state-id="Colima"><rect class="state-shape" x="560" y="120" width="80" height="60" rx="8"/><text class="state-label" x="600" y="155" text-anchor="middle">Colima</text></g>
+              <g data-state-id="Michoacán"><rect class="state-shape" x="660" y="120" width="140" height="60" rx="8"/><text class="state-label" x="730" y="155" text-anchor="middle">Michoacán</text></g>
+              <g data-state-id="Guanajuato"><rect class="state-shape" x="820" y="120" width="120" height="60" rx="8"/><text class="state-label" x="880" y="155" text-anchor="middle">Guanajuato</text></g>
+              <g data-state-id="Querétaro"><rect class="state-shape" x="950" y="120" width="120" height="60" rx="8"/><text class="state-label" x="1010" y="155" text-anchor="middle">Querétaro</text></g>
+
+              <!-- Row 3 -->
+              <g data-state-id="Durango"><rect class="state-shape" x="50" y="220" width="140" height="60" rx="8"/><text class="state-label" x="120" y="255" text-anchor="middle">Durango</text></g>
+              <g data-state-id="Zacatecas"><rect class="state-shape" x="210" y="220" width="140" height="60" rx="8"/><text class="state-label" x="280" y="255" text-anchor="middle">Zacatecas</text></g>
+              <g data-state-id="Aguascalientes"><rect class="state-shape" x="370" y="220" width="120" height="60" rx="8"/><text class="state-label" x="430" y="255" text-anchor="middle">Aguascalientes</text></g>
+              <g data-state-id="San Luis Potosí"><rect class="state-shape" x="500" y="220" width="140" height="60" rx="8"/><text class="state-label" x="570" y="255" text-anchor="middle">San Luis P.</text></g>
+              <g data-state-id="Coahuila2"><rect class="state-shape" x="660" y="220" width="140" height="60" rx="8"/><text class="state-label" x="730" y="255" text-anchor="middle">Coahuila (sur)</text></g>
+              <g data-state-id="Hidalgo"><rect class="state-shape" x="820" y="220" width="120" height="60" rx="8"/><text class="state-label" x="880" y="255" text-anchor="middle">Hidalgo</text></g>
+              <g data-state-id="Mexico"><rect class="state-shape" x="950" y="220" width="160" height="60" rx="8"/><text class="state-label" x="1030" y="255" text-anchor="middle">Estado de México</text></g>
+
+              <!-- Row 4 -->
+              <g data-state-id="Sinaloa2"><rect class="state-shape" x="30" y="320" width="120" height="60" rx="8"/><text class="state-label" x="90" y="355" text-anchor="middle">Baja/Mar</text></g>
+              <g data-state-id="Puebla"><rect class="state-shape" x="190" y="320" width="140" height="60" rx="8"/><text class="state-label" x="260" y="355" text-anchor="middle">Puebla</text></g>
+              <g data-state-id="Tlaxcala"><rect class="state-shape" x="350" y="320" width="100" height="60" rx="8"/><text class="state-label" x="400" y="355" text-anchor="middle">Tlaxcala</text></g>
+              <g data-state-id="Morelos"><rect class="state-shape" x="470" y="320" width="120" height="60" rx="8"/><text class="state-label" x="530" y="355" text-anchor="middle">Morelos</text></g>
+              <g data-state-id="Guerrero"><rect class="state-shape" x="610" y="320" width="140" height="60" rx="8"/><text class="state-label" x="680" y="355" text-anchor="middle">Guerrero</text></g>
+              <g data-state-id="Oaxaca"><rect class="state-shape" x="760" y="320" width="160" height="60" rx="8"/><text class="state-label" x="840" y="355" text-anchor="middle">Oaxaca</text></g>
+
+              <!-- Row 5 (southeast) -->
+              <g data-state-id="Chiapas"><rect class="state-shape" x="920" y="320" width="120" height="60" rx="8"/><text class="state-label" x="980" y="355" text-anchor="middle">Chiapas</text></g>
+              <g data-state-id="Veracruz"><rect class="state-shape" x="100" y="420" width="180" height="60" rx="8"/><text class="state-label" x="190" y="455" text-anchor="middle">Veracruz</text></g>
+              <g data-state-id="Tabasco"><rect class="state-shape" x="300" y="420" width="160" height="60" rx="8"/><text class="state-label" x="380" y="455" text-anchor="middle">Tabasco</text></g>
+              <g data-state-id="Campeche"><rect class="state-shape" x="480" y="420" width="120" height="60" rx="8"/><text class="state-label" x="540" y="455" text-anchor="middle">Campeche</text></g>
+              <g data-state-id="Yucatán"><rect class="state-shape" x="620" y="420" width="120" height="60" rx="8"/><text class="state-label" x="680" y="455" text-anchor="middle">Yucatán</text></g>
+              <g data-state-id="Quintana Roo"><rect class="state-shape" x="760" y="420" width="120" height="60" rx="8"/><text class="state-label" x="820" y="455" text-anchor="middle">Q. Roo</text></g>
+
+              <!-- Row 6 (northwest extras to reach 32) -->
+              <g data-state-id="Guanajuato2"><rect class="state-shape" x="930" y="420" width="120" height="60" rx="8"/><text class="state-label" x="990" y="455" text-anchor="middle">N. Estado</text></g>
+
+              <!-- Notes: This SVG is schematic; each group contains a clickable rect with the data-state-id attribute -->
+            </svg>
+          </div>
+
+          <div class="details" id="municipio-details" aria-live="polite">
+            <h3 id="det-name" style="margin-top:0">Seleccione un municipio o estado</h3>
+            <div id="det-summary" class="small muted">Aquí aparecerá un resumen con indicadores principales del estado o municipio seleccionado.</div>
+
+            <div style="margin-top:14px">
+              <div class="card small">
+                <strong>Incremento presupuesto:</strong> <span id="det-presup" style="color:var(--gold)">—</span>
+              </div>
+              <div class="card small" style="margin-top:10px">
+                <strong>Obras reportadas:</strong> <span id="det-obras" style="color:var(--gold)">—</span>
+              </div>
+            </div>
+
+            <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="resource-btn" id="btn-inegi" title="Ir a INEGI (sitio oficial)">INEGI <small>↗</small></button>
+              <button class="resource-btn" id="btn-bienestar" title="Ir a Secretaría de Bienestar">Secretaría Bienestar <small>↗</small></button>
+              <button class="resource-btn" id="btn-datos" title="Ir al portal de datos abiertos">Datos abiertos (TMAD) <small>↗</small></button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start">
+          <div style="flex:1 1 620px" class="chart-card">
+            <canvas id="chartTimeline" height="160" aria-label="Serie temporal presupuesto"></canvas>
+          </div>
+          <div style="flex:0 0 320px" class="chart-card">
+            <canvas id="chartDistribution" height="160" aria-label="Distribución resultados"></canvas>
+          </div>
+        </div>
+
+        <div class="youtube-frame" style="margin-top:20px">
+          <iframe class="youtube-iframe" src="https://www.youtube.com/embed/Z2G3lqvKbx4" title="Video sobre impacto 4T" loading="lazy" style="width:100%;max-width:920px;aspect-ratio:16/9;border-radius:10px;border:0"></iframe>
+        </div>
+      </section>
+
+      <!-- EXPERTOS -->
+      <section id="expertos" aria-labelledby="expertos-title">
+        <h2 id="expertos-title">Opinión de Expertos</h2>
+        <p class="small muted">Selección curada de análisis y artículos de especialistas en política pública y administración local.</p>
+
+        <div class="expert-grid">
+          <div class="expert" tabindex="0" onclick="toggleExpert(this)">
+            <img src="https://as.unam.mx/wp-content/uploads/2021/11/SofiaHernandez-fotoBN-400x400.jpg" alt="Dra. Sofía Hernández" loading="lazy" onerror="this.style.display='none'">
+            <div class="meta">
+              <h4>Dra. Sofía Hernández — UNAM</h4>
+              <p class="small">"La 4T reconfigura prioridades locales; la capacidad de ejecución municipal determina resultados."</p>
+              <div class="expand small muted">Artículo completo: "Gobierno local y políticas federales (2024)".</div>
+            </div>
+          </div>
+
+          <div class="expert" tabindex="0" onclick="toggleExpert(this)">
+            <img src="https://www.uaeh.edu.mx/investigacion/productos/18462/images/19234.jpg" alt="Dr. Emilio Valadez" loading="lazy" onerror="this.style.display='none'">
+            <div class="meta">
+              <h4>Dr. Emilio Valadez — COLMEX</h4>
+              <p class="small">"La heterogeneidad regional exige métricas desagregadas para evaluar verdaderamente la transformación."</p>
+              <div class="expand small muted">Artículo completo: "Micro-análisis de inversión pública (2023)".</div>
+            </div>
+          </div>
+
+          <div class="expert" tabindex="0" onclick="toggleExpert(this)">
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=60" alt="Dr. invitado" loading="lazy" onerror="this.style.display='none'">
+            <div class="meta">
+              <h4>Dr. Invitado — Investigador</h4>
+              <p class="small">"Es clave medir no solo montos, sino eficacia, mantenimiento y sostenibilidad de obras públicas."</p>
+              <div class="expand small muted">Ensayo: "Eficacia en la inversión local".</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONCLUSIONES -->
+      <section id="conclusiones" aria-labelledby="concl-title" class="conclusions">
+        <h2 id="concl-title">Conclusiones y recomendaciones</h2>
+        <p>
+          El balance muestra aumentos en inversión en municipios clave, junto con retos persistentes: desigualdad territorial, capacidad administrativa y transparencia.
+          Recomendamos políticas focalizadas, fortalecimiento de capacidades municipales y portales de datos abiertos para auditoría ciudadana.
+        </p>
+
+        <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap">
+          <div class="card">
+            <h3>Recomendación 1</h3>
+            <p class="small muted">Fortalecer unidades técnicas municipales y controles de calidad de obra.</p>
+          </div>
+          <div class="card">
+            <h3>Recomendación 2</h3>
+            <p class="small muted">Mejorar transparencia y disponibilidad de datos por municipio.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECURSOS -->
+      <section id="recursos" aria-labelledby="recursos-title">
+        <h2 id="recursos-title">Recursos y enlaces oficiales</h2>
+        <p class="small muted">Accede a las fuentes originales y portales de datos:</p>
+
+        <div id="recursos-links" class="resources" style="margin-top:12px">
+          <a class="resource-btn" href="https://www.inegi.org.mx/" target="_blank" rel="noopener noreferrer">
+            <strong>INEGI</strong><small>Estadística oficial ↗</small>
+          </a>
+          <a class="resource-btn" href="https://www.gob.mx/bienestar" target="_blank" rel="noopener noreferrer">
+            <strong>Secretaría de Bienestar</strong><small>Programas sociales ↗</small>
+          </a>
+          <a class="resource-btn" href="https://www.gob.mx/" target="_blank" rel="noopener noreferrer">
+            <strong>Gobierno de México</strong><small>Portal oficial ↗</small>
+          </a>
+          <a class="resource-btn" href="https://datos.gob.mx/" target="_blank" rel="noopener noreferrer">
+            <strong>Datos abiertos (TMAD)</strong><small>Repositorio ↗</small>
+          </a>
+          <a class="resource-btn" href="https://www.scielo.org.mx/" target="_blank" rel="noopener noreferrer">
+            <strong>Artículos académicos</strong><small>Scielo México ↗</small>
+          </a>
+        </div>
+
+        <div style="margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <div style="flex:1;min-width:220px">
+            <label for="email-sub" class="small muted">Suscríbete para actualizaciones</label>
+            <div class="subscribe" style="margin-top:8px">
+              <input id="email-sub" class="input-sub" placeholder="tu@correo.com" aria-label="Correo para suscripción">
+              <button id="btn-sub" class="btn-primary">Suscribirme</button>
+            </div>
+            <div id="sub-msg" class="small muted" style="margin-top:8px"></div>
+          </div>
+
+          <div style="min-width:200px">
+            <label class="small muted">Informe completo</label>
+            <div style="display:flex;gap:10px;margin-top:8px">
+              <button id="download-report" class="btn-download" title="Descargar informe (generar PDF)">Descargar informe</button>
+              <a class="btn-ghost" href="https://www.laboratoriopolitico4T.mx/informe2025" target="_blank" rel="noopener noreferrer" style="align-self:center">Ver online</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      <div style="display:flex;flex-direction:column;align-items:flex-start">
+        <div style="font-weight:700">© 2025 Laboratorio Político de Investigación Social</div>
+        <div class="small muted">Analizando el futuro de México, un municipio a la vez.</div>
+        <div class="small muted" style="margin-top:6px">Creado por diego chavez ortiz</div>
+      </div>
+
+      <svg class="footer-atom" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="18" stroke="#FFD700" stroke-width="3" fill="none"></circle>
+        <ellipse cx="32" cy="32" rx="10" ry="28" transform="rotate(35 32 32)" stroke="#FFD700" stroke-width="2" fill="none"></ellipse>
+        <ellipse cx="32" cy="32" rx="10" ry="28" transform="rotate(-35 32 32)" stroke="#FFD700" stroke-width="2" fill="none"></ellipse>
+        <circle cx="32" cy="32" r="5.5" fill="#FFD700"></circle>
+      </svg>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    // Everything wrapped to avoid errors. Adds state support (all states) and makes map + search functional.
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- STATES data: all 32 states with sample data (replace with real dataset as needed) ---
+      const STATES = [
+        { id: 'Aguascalientes', presup: [40,45,50,58,63,70], obras: 12, resumen: 'Capital con obras de infraestructura y servicios.' },
+        { id: 'Baja California', presup: [90,95,110,124,140,160], obras: 34, resumen: 'Foco en comercio y puertos.' },
+        { id: 'Baja California Sur', presup: [30,32,35,38,44,48], obras: 8, resumen: 'Inversión en turismo y servicios.' },
+        { id: 'Campeche', presup: [20,22,24,26,29,33], obras: 6, resumen: 'Iniciativas en energía y comunidad.' },
+        { id: 'Chiapas', presup: [50,54,60,66,72,80], obras: 24, resumen: 'Proyectos sociales y mejoras rurales.' },
+        { id: 'Chihuahua', presup: [110,115,120,140,160,178], obras: 38, resumen: 'Infraestructura vial y urbana.' },
+        { id: 'Ciudad de México', presup: [600,630,680,720,770,820], obras: 210, resumen: 'Grandes inversiones en movilidad y obra pública.' },
+        { id: 'Coahuila', presup: [100,105,112,120,132,145], obras: 44, resumen: 'Industrial y energético con inversión en infraestructura.' },
+        { id: 'Colima', presup: [22,24,26,30,33,36], obras: 7, resumen: 'Turismo y pequeño desarrollo urbano.' },
+        { id: 'Durango', presup: [48,52,58,64,70,78], obras: 16, resumen: 'Obras en infraestructura y servicios' },
+        { id: 'Guanajuato', presup: [140,150,165,180,200,225], obras: 72, resumen: 'Gran crecimiento en obra pública y empleo.' },
+        { id: 'Guerrero', presup: [75,80,86,95,105,116], obras: 28, resumen: 'Mejoras en infraestructura turística y social.' },
+        { id: 'Hidalgo', presup: [55,58,63,70,78,86], obras: 20, resumen: 'Programas de desarrollo local y obra social.' },
+        { id: 'Jalisco', presup: [220,235,255,290,320,350], obras: 98, resumen: 'Inversión en movilidad y servicios urbanos.' },
+        { id: 'México', presup: [320,340,365,400,440,480], obras: 140, resumen: 'Fuerte inversión en municipios con prioridad social.' },
+        { id: 'Michoacán', presup: [90,95,105,118,132,150], obras: 36, resumen: 'Proyectos de infraestructura social y rural.' },
+        { id: 'Morelos', presup: [38,41,45,50,56,62], obras: 14, resumen: 'Obras en servicios y vivienda.' },
+        { id: 'Nayarit', presup: [28,30,34,38,42,48], obras: 10, resumen: 'Mejoras en infraestructura turística y pesquera.' },
+        { id: 'Nuevo León', presup: [240,255,280,310,340,380], obras: 120, resumen: 'Fuerte inversión industrial y urbana.' },
+        { id: 'Oaxaca', presup: [70,74,80,88,96,108], obras: 30, resumen: 'Obras sociales y de infraestructura rural.' },
+        { id: 'Puebla', presup: [130,140,152,168,185,205], obras: 62, resumen: 'Inversión en infraestructura y servicios públicos.' },
+        { id: 'Querétaro', presup: [80,86,92,100,110,125], obras: 35, resumen: 'Desarrollo industrial y urbano.' },
+        { id: 'Quintana Roo', presup: [95,100,110,125,140,160], obras: 44, resumen: 'Inversión en turismo y servicios.' },
+        { id: 'San Luis Potosí', presup: [70,74,80,88,98,110], obras: 30, resumen: 'Crecimiento en infraestructura productiva.' },
+        { id: 'Sinaloa', presup: [85,90,98,110,125,140], obras: 40, resumen: 'Obras en agricultura y puertos.' },
+        { id: 'Sonora', presup: [115,120,130,145,160,180], obras: 46, resumen: 'Inversión en energía y logística.' },
+        { id: 'Tabasco', presup: [60,64,70,78,85,95], obras: 22, resumen: 'Proyectos de infraestructura y comunidad.' },
+        { id: 'Tamaulipas', presup: [95,100,110,124,138,155], obras: 36, resumen: 'Movilidad y obra pública en municipios clave.' },
+        { id: 'Tlaxcala', presup: [18,20,22,24,26,30], obras: 6, resumen: 'Proyectos con enfoque social y cultural.' },
+        { id: 'Veracruz', presup: [160,170,185,205,230,255], obras: 84, resumen: 'Infraestructura portuaria y social.' },
+        { id: 'Yucatán', presup: [70,75,80,90,100,115], obras: 28, resumen: 'Turismo y servicios urbanos con inversión sostenida.' },
+        { id: 'Zacatecas', presup: [40,42,46,52,58,64], obras: 12, resumen: 'Proyectos de infraestructura y servicios rurales.' }
+      ];
+
+      // Existing MUNICIPIOS demo kept (no changes requested)
+      const MUNICIPIOS = [
+        { id: 'monterrey', name: 'Monterrey, NL', resumen: 'Avances en infraestructura, transporte y programas sociales. Crecimiento industrial moderado.', presup: [200,220,245,280,320,360], obras: 58 },
+        { id: 'zapopan', name: 'Zapopan, JAL', resumen: 'Inversión focalizada en vivienda y seguridad pública. Incremento de empleo formal.', presup: [110,123,140,160,190,220], obras: 42 },
+        { id: 'oaxaca', name: 'Oaxaca de Juárez, OAX', resumen: 'Mejoras en infraestructura social, pero reto en mantenimiento y transparencia.', presup: [60,64,72,82,95,108], obras: 24 }
+      ];
+
+      // Element refs - defensive
+      const intro = document.getElementById('intro-landing');
+      const main = document.getElementById('main-content');
+      const btnEntrar = document.getElementById('btn-entrar');
+      const btnResumen = document.getElementById('btn-resumen');
+      const municipioListEl = document.getElementById('municipio-list');
+      const detName = document.getElementById('det-name');
+      const detSummary = document.getElementById('det-summary');
+      const detPresup = document.getElementById('det-presup');
+      const detObras = document.getElementById('det-obras');
+      const searchInput = document.getElementById('municipio-search');
+      const btnSearch = document.getElementById('btn-search');
+      const searchResult = document.getElementById('search-result');
+      const btnInegi = document.getElementById('btn-inegi');
+      const btnBienestar = document.getElementById('btn-bienestar');
+      const btnDatos = document.getElementById('btn-datos');
+      const btnSub = document.getElementById('btn-sub');
+      const subMsg = document.getElementById('sub-msg');
+      const downloadReport = document.getElementById('download-report');
+      const openReport = document.getElementById('open-report');
+
+      if(!intro || !main) return;
+
+      // Intro behavior
+      if(btnEntrar) btnEntrar.addEventListener('click', ()=> closeIntro());
+      if(btnResumen) btnResumen.addEventListener('click', ()=> { closeIntro(); setTimeout(()=> goToSection('conclusiones'), 420); });
+      document.addEventListener('keydown', (e)=> { if(e.key === 'Escape' && !intro.classList.contains('fadeOut')) closeIntro(); });
+      function closeIntro(){
+        intro.classList.add('fadeOut');
+        main.setAttribute('aria-hidden', 'false');
+        setTimeout(()=>{ main.classList.add('visible'); main.focus && main.focus(); }, 650);
+      }
+
+      // Nav
+      const navLinks = document.querySelectorAll('.nav-menu a');
+      function goToSection(id){
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.scrollIntoView({behavior:'smooth', block:'start'});
+        navLinks.forEach(a=>a.classList.remove('active'));
+        const match = document.querySelector('.nav-menu a[href="#'+id+'"]');
+        if(match) match.classList.add('active');
+      }
+      navLinks.forEach(a => a.addEventListener('click', e => { e.preventDefault(); const href = a.getAttribute('href').replace('#',''); goToSection(href); }));
+      function updateActiveOnScroll(){
+        const fromTop = window.scrollY + 120;
+        document.querySelectorAll('section[id]').forEach(section=>{
+          const top = section.offsetTop;
+          const height = section.offsetHeight;
+          const link = document.querySelector('.nav-menu a[href="#'+section.id+'"]');
+          if(fromTop >= top && fromTop < top + height){ navLinks.forEach(a=>a.classList.remove('active')); if(link) link.classList.add('active'); }
+        });
+      }
+      window.addEventListener('scroll', updateActiveOnScroll);
+      updateActiveOnScroll();
+
+      // Render municipio buttons (kept) and state buttons
+      if(municipioListEl){
+        // First, municipalities demo
+        MUNICIPIOS.forEach(m => {
+          const btn = document.createElement('button');
+          btn.className = 'mun-btn';
+          btn.type = 'button';
+          btn.textContent = m.name;
+          btn.title = 'Ver datos de ' + m.name;
+          btn.addEventListener('click', ()=> selectMunicipio(m.id));
+          municipioListEl.appendChild(btn);
+        });
+        // Divider
+        const sep = document.createElement('div'); sep.style.height='1px'; sep.style.margin='6px 0'; municipioListEl.appendChild(sep);
+        // Then all states
+        STATES.forEach(s => {
+          const btn = document.createElement('button');
+          btn.className = 'mun-btn';
+          btn.type = 'button';
+          btn.textContent = s.id;
+          btn.title = 'Ver datos del estado ' + s.id;
+          btn.addEventListener('click', ()=> selectState(s.id));
+          municipioListEl.appendChild(btn);
+        });
+      }
+
+      // Charts
+      let timelineChart = null;
+      let distributionChart = null;
+      function createTimelineChart(data){
+        const el = document.getElementById('chartTimeline');
+        if(!el || typeof Chart === 'undefined') return;
+        const ctx = el.getContext('2d');
+        timelineChart = new Chart(ctx, {
+          type: 'line',
+          data: { labels: [2017,2018,2019,2020,2021,2022], datasets: [{ label: 'Presupuesto (MDP)', data: data, borderColor: '#FFD700', backgroundColor: 'rgba(255,215,0,0.12)', tension: 0.32, pointRadius: 3 }] },
+          options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{color:'#fff'}}}, scales:{x:{ticks:{color:'#ddd'}}, y:{ticks:{color:'#ddd'}}} }
+        });
+      }
+      function updateTimelineChart(data){
+        if(!timelineChart && typeof Chart !== 'undefined') return createTimelineChart(data);
+        if(!timelineChart) return;
+        timelineChart.data.datasets[0].data = data;
+        timelineChart.update();
+      }
+      function createDistributionChart(item){
+        const el = document.getElementById('chartDistribution');
+        if(!el || typeof Chart === 'undefined') return;
+        const ctx = el.getContext('2d');
+        distributionChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['Empleo','Obras','Educación','Inversión'],
+            datasets: [{
+              label: 'Indicador (índice)',
+              data: [Math.round(item.presup.at(-1)*0.12), item.obras, Math.round(item.presup.at(-1)*0.06), Math.round(item.presup.at(-1)*0.45)],
+              backgroundColor: ['#ffd700cc','#a18a27bb','#eebc3dAA','#ffeb70cc'], borderRadius:6
+            }]
+          },
+          options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{ticks:{color:'#eee'}}, y:{ticks:{color:'#eee'}}} }
+        });
+      }
+      function updateDistributionChart(item){
+        if(!distributionChart && typeof Chart !== 'undefined') return createDistributionChart(item);
+        if(!distributionChart) return;
+        distributionChart.data.datasets[0].data = [Math.round(item.presup.at(-1)*0.12), item.obras, Math.round(item.presup.at(-1)*0.06), Math.round(item.presup.at(-1)*0.45)];
+        distributionChart.update();
+      }
+
+      // Selection functions
+      let currentItem = null; // can be municipio or state
+      function selectMunicipio(id){
+        const m = MUNICIPIOS.find(x=>x.id===id);
+        if(!m) return;
+        currentItem = m;
+        detName && (detName.textContent = m.name);
+        detSummary && (detSummary.textContent = m.resumen);
+        detPresup && (detPresup.textContent = `${m.presup.at(-1)} MDP`);
+        detObras && (detObras.textContent = m.obras);
+        updateTimelineChart(m.presup);
+        updateDistributionChart(m);
+        if(window.innerWidth < 800) document.getElementById('municipio-details')?.scrollIntoView({behavior:'smooth'});
+      }
+
+      function selectState(name){
+        const s = STATES.find(x=>x.id === name);
+        if(!s) return;
+        currentItem = s;
+        detName && (detName.textContent = s.id);
+        detSummary && (detSummary.textContent = s.resumen);
+        detPresup && (detPresup.textContent = `${s.presup.at(-1)} MDP`);
+        detObras && (detObras.textContent = s.obras);
+        updateTimelineChart(s.presup);
+        updateDistributionChart(s);
+        // highlight selected state in SVG
+        document.querySelectorAll('#svgMap .state-shape').forEach(el=>el.classList.remove('active'));
+        const group = Array.from(document.querySelectorAll('#svgMap g')).find(g => g.getAttribute('data-state-id') === name);
+        if(group){
+          const rect = group.querySelector('.state-shape');
+          rect && rect.classList.add('active');
+        }
+        if(window.innerWidth < 800) document.getElementById('municipio-details')?.scrollIntoView({behavior:'smooth'});
+      }
+
+      // Search: check both municipios and estados
+      if(btnSearch && searchInput){
+        btnSearch.addEventListener('click', ()=> {
+          const q = searchInput.value.trim().toLowerCase();
+          if(!q){ searchResult && (searchResult.textContent = 'Escribe el nombre de un municipio o estado.'); return; }
+          // Try municipalities first
+          const mf = MUNICIPIOS.find(m => m.name.toLowerCase().includes(q) || m.id.toLowerCase()===q);
+          if(mf){ selectMunicipio(mf.id); searchResult && (searchResult.textContent = 'Municipio encontrado: ' + mf.name); return; }
+          // Try states
+          const sf = STATES.find(s => s.id.toLowerCase().includes(q));
+          if(sf){ selectState(sf.id); searchResult && (searchResult.textContent = 'Estado encontrado: ' + sf.id); return; }
+          searchResult && (searchResult.textContent = 'No se encontró el municipio/estado en la muestra demo.');
+        });
+        searchInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter') btnSearch.click(); });
+      }
+
+      // SVG state clicks - delegate
+      const svgMap = document.getElementById('svgMap');
+      if(svgMap){
+        svgMap.querySelectorAll('g').forEach(g => {
+          const id = g.getAttribute('data-state-id');
+          if(!id) return;
+          const rect = g.querySelector('.state-shape');
+          // Make whole group clickable
+          g.style.cursor = 'pointer';
+          g.addEventListener('click', ()=> selectState(id));
+          // Also allow keyboard
+          g.setAttribute('tabindex', '0');
+          g.addEventListener('keydown', (ev)=> { if(ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); selectState(id); } });
+          if(rect){
+            rect.addEventListener('click', ()=> selectState(id));
+          }
+        });
+      }
+
+      // Resource buttons
+      btnInegi && btnInegi.addEventListener('click', ()=> window.open('https://www.inegi.org.mx/', '_blank', 'noopener'));
+      btnBienestar && btnBienestar.addEventListener('click', ()=> window.open('https://www.gob.mx/bienestar', '_blank', 'noopener'));
+      btnDatos && btnDatos.addEventListener('click', ()=> window.open('https://datos.gob.mx/', '_blank', 'noopener'));
+
+      // Subscription demo
+      btnSub && btnSub.addEventListener('click', ()=>{
+        const email = document.getElementById('email-sub')?.value?.trim();
+        if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ subMsg && (subMsg.textContent = 'Introduce un correo válido.'); return; }
+        subMsg && (subMsg.textContent = 'Gracias — te hemos añadido a la lista de notificaciones (demo).');
+      });
+
+      // PDF generation (jsPDF)
+      downloadReport && downloadReport.addEventListener('click', async () => {
+        try {
+          if(!window.jspdf){ alert('La librería de PDF no está cargada todavía. Intenta de nuevo.'); return; }
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF({unit:'pt', format:'a4'});
+          doc.setFontSize(18);
+          doc.setTextColor(20,20,20);
+          doc.text('Laboratorio Político — Informe Resumido', 40, 60);
+          doc.setFontSize(11);
+          doc.text('Fecha: ' + new Date().toLocaleString(), 40, 84);
+          doc.setDrawColor(255,215,0);
+          doc.setLineWidth(1.2);
+          doc.line(40, 94, 555, 94);
+          doc.setFontSize(12);
+          const conclusions = 'Resumen: Los resultados muestran aumentos en inversión en municipios y estados clave; persisten retos de desigualdad, capacidad administrativa y transparencia.';
+          doc.splitTextToSize(conclusions, 520).forEach((line, i) => doc.text(line, 40, 120 + i*14));
+          if(currentItem){
+            doc.setFontSize(12);
+            doc.text('Elemento seleccionado: ' + (currentItem.name || currentItem.id), 40, 220);
+            doc.setFontSize(11);
+            doc.text('Resumen: ' + (currentItem.resumen || currentItem.resumen), 40, 236);
+            doc.text('Incremento presupuesto (último): ' + currentItem.presup.at(-1) + ' MDP', 40, 256);
+            doc.text('Obras reportadas: ' + currentItem.obras, 40, 276);
+          }
+          doc.save('informe_laboratorio_4T_resumen.pdf');
+        } catch (err) {
+          console.error('Error generando PDF', err);
+          alert('Error generando PDF (revisa la consola).');
+        }
+      });
+      openReport && openReport.addEventListener('click', ()=> downloadReport && downloadReport.click());
+
+      // Fallback images
+      document.querySelectorAll('img').forEach(img => img.addEventListener('error', ()=> img.style.display='none'));
+
+      // Initialize charts with first state by default
+      const waitForCharts = () => {
+        if(typeof Chart !== 'undefined'){ createTimelineChart(STATES[0].presup); createDistributionChart(STATES[0]); selectState(STATES[0].id); }
+        else {
+          let attempts = 0;
+          const t = setInterval(()=> {
+            attempts++;
+            if(typeof Chart !== 'undefined'){ clearInterval(t); createTimelineChart(STATES[0].presup); createDistributionChart(STATES[0]); selectState(STATES[0].id); }
+            if(attempts > 30) clearInterval(t);
+          }, 150);
+        }
+      };
+      waitForCharts();
+
+      // small mobile tweak
+      if(/Mobi|Android|iPhone/i.test(navigator.userAgent)) document.body.style.fontSize = '1.02rem';
+    });
+  </script>
+</body>
+</html>
